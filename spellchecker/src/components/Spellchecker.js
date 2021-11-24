@@ -6,7 +6,7 @@ const wordList = InitialWordList.split(', ')
 export default function Spellchecker() {
 
   const [text, setText] = useState('')
-  const [spellingError, setSpellingError] = useState('')
+  const [spellingError, setSpellingError] = useState([])
 
   const handleChange = (event) => {
     setText(event.target.value)
@@ -16,9 +16,10 @@ export default function Spellchecker() {
     const myTimeout = setTimeout(() => {
       const wordsWritten = text.split(' ')
       console.log(wordsWritten)
+      setSpellingError([])
       for (let i = 0; i < wordsWritten.length; i++) {
         if (wordList.includes(wordsWritten[i]) === false && wordsWritten[i] !== ' ' && wordsWritten[i] !== '') {
-          setSpellingError(`The word "${wordsWritten[i]}" is spelled wrong or is not a word in BASIC English.`)
+          setSpellingError((spellingError) => [...spellingError, wordsWritten[i]])
         }
       }
     }, 500)
@@ -29,7 +30,12 @@ export default function Spellchecker() {
     <div className="outer-container">
       <h2>Type something in BASIC English</h2>
       <textarea cols="40" rows="8" value={text} onChange={handleChange}></textarea>
-      <p>{spellingError}</p>
+      <p>The word or words</p>
+      <div>{spellingError.join(', ')}</div>
+      {/* <div>{spellingError.map((singleError, key) => {
+        return <div key={key}>"{singleError}" </div>
+      })}</div> */}
+      <p>is or are wrong.</p>
     </div>
   )
 
